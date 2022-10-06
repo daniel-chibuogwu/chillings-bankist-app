@@ -81,7 +81,7 @@ const displayMovements = function (movements) {
     const type = mov > 0 ? "deposit" : "withdrawal";
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-          <div class="movements__value">${mov}</div>
+          <div class="movements__value">${Math.abs(mov)}</div>
         </div>`;
       containerMovements.insertAdjacentHTML('afterbegin', html);
   })
@@ -89,3 +89,17 @@ const displayMovements = function (movements) {
 
 }
 displayMovements(account1.movements);
+
+// Creating Usernames
+const createUsernames = accounts => {
+  accounts.forEach(account => {
+    account.username = account.owner.toLowerCase().split(' ').map(name => name[0]).join("");
+  });
+  return accounts;
+}
+
+const deposits = movements.filter(mov => mov > 0);
+
+const withdrawals = movements.filter(mov => mov < 0);
+
+console.log(withdrawals, deposits);
