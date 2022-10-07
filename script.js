@@ -102,4 +102,3 @@ const deposits = movements.filter(mov => mov > 0);
 
 const withdrawals = movements.filter(mov => mov < 0);
 
-console.log(withdrawals, deposits);
