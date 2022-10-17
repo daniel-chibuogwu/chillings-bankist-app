@@ -341,7 +341,7 @@ currenciesUnique.forEach(function (value, _, map) {
 ///////////////////////////////////////
 // Coding Challenge #1
 
-/* 
+/*
 Julia and Kate are doing a study on dogs. So each of them asked 5 dog owners about their dog's age, and stored the data into an array (one array for each). For now, they are just interested in knowing whether a dog is an adult or a puppy. A dog is an adult if it is at least 3 years old, and it's a puppy if it's less than 3 years old.
 
 Create a function 'checkDogs', which accepts 2 arrays of dog's ages ('dogsJulia' and 'dogsKate'), and does the following things:
@@ -449,7 +449,7 @@ console.log(max);
 ///////////////////////////////////////
 // Coding Challenge #2
 
-/* 
+/*
 Let's go back to Julia and Kate's study about dogs. This time, they want to convert dog ages to human ages and calculate the average age of the dogs in their study.
 
 Create a function 'calcAverageHumanAge', which accepts an arrays of dog's ages ('ages'), and does the following things in order:
@@ -464,6 +464,13 @@ TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
+// My Solution
+// const calcAverageHumanAge = (dogAges) => {
+//   return  dogAges.map(dogAge => dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4).filter(humanAge => humanAge >= 18).reduce((acc, age, i, arr) => acc + age/arr.length, 0);
+// }
+//
+// console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
+// console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
 
 /*
 const calcAverageHumanAge = function (ages) {
@@ -508,7 +515,7 @@ console.log(totalDepositsUSD);
 ///////////////////////////////////////
 // Coding Challenge #3
 
-/* 
+/*
 Rewrite the 'calcAverageHumanAge' function from the previous challenge, but this time as an arrow function, and using chaining!
 
 TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
@@ -717,7 +724,7 @@ console.log(convertTitleCase('and here is another title with an EXAMPLE'));
 ///////////////////////////////////////
 // Coding Challenge #4
 
-/* 
+/*
 Julia and Kate are still studying dogs, and this time they are studying if dogs are eating too much or too little.
 Eating too much means the dog's current food portion is larger than the recommended portion, and eating too little is the opposite.
 Eating an okay amount means the dog's current food portion is within a range 10% above and 10% below the recommended portion (see hint).

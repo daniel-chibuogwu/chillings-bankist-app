@@ -28,7 +28,7 @@ const account3 = {
 
 const account4 = {
   owner: "Sarah Smith",
-  movements: [430, 1000, 700, 50,    90],
+  movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
 };
@@ -75,20 +75,7 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
-const displayMovements = function (movements) {
-  containerMovements.innerHTML = "";
-  movements.forEach((mov, i)=> {
-    const type = mov > 0 ? "deposit" : "withdrawal";
-    const html = `<div class="movements__row">
-          <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-          <div class="movements__value">${Math.abs(mov)}</div>
-        </div>`;
-      containerMovements.insertAdjacentHTML('afterbegin', html);
-  })
 
-
-}
-displayMovements(account1.movements);
 
 // Creating Usernames
 const createUsernames = accounts => {
@@ -97,8 +84,76 @@ const createUsernames = accounts => {
   });
   return accounts;
 }
+createUsernames(accounts);
 
-const deposits = movements.filter(mov => mov > 0);
 
-const withdrawals = movements.filter(mov => mov < 0);
 
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = "";
+  movements.forEach((mov, i)=> {
+    const type = mov > 0 ? "deposit" : "withdrawal";
+    const html = `<div class="movements__row">
+          <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+          <div class="movements__value">${Math.abs(mov)}€</div>
+        </div>`;
+      containerMovements.insertAdjacentHTML('afterbegin', html);
+  })
+}
+
+//calculating the Balance for Logged-in user
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${acc.balance}€`;
+}
+
+//calculating the summary of the logged-in user
+const calcDisplaySummary = function(acc) {
+  const {movements, interestRate} = acc;
+  const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}€`;
+
+  const out = movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  const interest = movements.filter(mov => mov > 0).map(deposit => interestRate/100 * deposit).filter(interest => interest >= 1).reduce((acc, interest) =>  acc + interest, 0);
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+}
+
+
+//Event Handler
+let currentAccount = account1;
+
+btnLogin.addEventListener('click', function(e) {
+  // Prevent form from submitting
+  e.preventDefault();
+  // currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
+  // comment out later
+  // currentAccount = account1;
+  // if(currentAccount?.pin === Number(inputLoginPin.value)) {
+  //   inputLoginUsername.value = inputLoginPin.value = "";
+
+    // removing focus from the input fields
+    inputLoginUsername.blur();
+    inputLoginPin.blur();
+    const {owner, movements, interestRate} = currentAccount;
+    calcDisplayBalance(currentAccount);
+    displayMovements(movements);
+    calcDisplaySummary(currentAccount);
+    labelWelcome.textContent = `Welcome back, ${owner.split(' ')[0]}`;
+    containerApp.style.opacity = "100";
+  // }
+})
+
+// Working on the Transfer
+btnTransfer.addEventListener('click', function(e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(acc => inputTransferTo.value === acc.username);
+if(amount > 0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username ) {
+  currentAccount.movements.push(-amount);
+  receiverAcc.movements.push(amount);
+
+}
+
+
+})
