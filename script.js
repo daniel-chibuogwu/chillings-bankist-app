@@ -216,7 +216,21 @@ displayMovements(currentAccount.movements, sorted);
 //
 // const z = Array.from({length: 100}, (_, i) => Math.floor((Math.random() * i)));
 // console.log(z);
+//
+// const {deposits, withdrawals} = accounts.flatMap(acc => acc.movements).reduce((sums, cur) => {
+//      sums[cur > 0 ? 'deposits' : "withdrawals"] +=cur;
+//       return sums;
+// }
+// , {deposits: 0, withdrawals: 0});
 
-const bankDepositSum = accounts.flatMap(acc => acc.movements).filter((mov) => mov > 0).reduce((acc, mov) => acc + mov, 0);
+//
+// const convertTitleCase = title => {
+//   const exceptions = ['a', 'an', 'the', 'but', 'or', "on", "in", "with", "by"];
+//   return title.toLowerCase().split(' ').map((word, i) => exceptions.includes(word) && i > 0  ? word :  word[0].toUpperCase() + word.slice(1)).join(" ");
+// }
+// console.log(convertTitleCase('or I or am on the road'));
+// console.log(convertTitleCase('The book is on the table by THE BoARD'));
+// console.log(convertTitleCase('I am with Shola in Tokyo or in Japan'));
+//
 
-console.log(bankDepositSum);
+
