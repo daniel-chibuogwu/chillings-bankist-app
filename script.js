@@ -216,3 +216,7 @@ displayMovements(currentAccount.movements, sorted);
 //
 // const z = Array.from({length: 100}, (_, i) => Math.floor((Math.random() * i)));
 // console.log(z);
+
+const bankDepositSum = accounts.flatMap(acc => acc.movements).filter((mov) => mov > 0).reduce((acc, mov) => acc + mov, 0);
+
+console.log(bankDepositSum);
