@@ -87,10 +87,12 @@ const createUsernames = accounts => {
 createUsernames(accounts);
 
 
-
+let sorted = false;
 const displayMovements = function (movements) {
   containerMovements.innerHTML = "";
-  movements.forEach((mov, i)=> {
+  const sortedMov = sorted ? movements.slice().sort((a,b) => a - b) : movements;
+
+  sortedMov.forEach((mov, i)=> {
     const type = mov > 0 ? "deposit" : "withdrawal";
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
@@ -200,5 +202,17 @@ btnClose.addEventListener('click', function(e) {
     containerApp.style.opacity = "0";
  }
 })
- const overallBalance =  accounts.flatMap(acc => acc.movements).reduce((acc, mov) => acc + mov , 0);
-console.log(overallBalance);
+
+// Sorting movements
+btnSort.addEventListener('click', function(e) {
+  e.preventDefault();
+  sorted = !sorted;
+displayMovements(currentAccount.movements, sorted);
+})
+
+//
+//  const overallBalance =  accounts.flatMap(acc => acc.movements).reduce((acc, mov) => acc + mov , 0);
+// console.log(overallBalance);
+
+const z = Array.from({length: 100}, (_, i) => Math.floor((Math.random() * i)));
+console.log(z);
