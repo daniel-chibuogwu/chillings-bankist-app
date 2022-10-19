@@ -213,6 +213,6 @@ displayMovements(currentAccount.movements, sorted);
 //
 //  const overallBalance =  accounts.flatMap(acc => acc.movements).reduce((acc, mov) => acc + mov , 0);
 // console.log(overallBalance);
-
-const z = Array.from({length: 100}, (_, i) => Math.floor((Math.random() * i)));
-console.log(z);
+//
+// const z = Array.from({length: 100}, (_, i) => Math.floor((Math.random() * i)));
+// console.log(z);
