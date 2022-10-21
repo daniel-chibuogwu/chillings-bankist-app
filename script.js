@@ -4,36 +4,53 @@
 /////////////////////////////////////////////////
 // BANKIST APP
 
+/////////////////////////////////////////////////
 // Data
+
+// DIFFERENT DATA! Contains movement dates, currency and locale
+
 const account1 = {
-  owner: "Daniel Chillings",
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  owner: 'Daniel Chillings',
+  movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+
+  movementsDates: [
+    '2019-11-18T21:31:17.178Z',
+    '2019-12-23T07:42:02.383Z',
+    '2020-01-28T09:15:04.904Z',
+    '2020-04-01T10:17:24.185Z',
+    '2020-05-08T14:11:59.604Z',
+    '2020-05-27T17:01:17.194Z',
+    '2020-07-11T23:36:17.929Z',
+    '2020-07-12T10:51:36.790Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT', // de-DE
 };
 
 const account2 = {
-  owner: "Jessica Davis",
+  owner: 'Jessica Davis',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
-const account3 = {
-  owner: "Steven Thomas Williams",
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
-};
+const accounts = [account1, account2];
 
-const account4 = {
-  owner: "Sarah Smith",
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
-  pin: 4444,
-};
-
-const accounts = [account1, account2, account3, account4];
 
 // Elements
 const labelWelcome = document.querySelector(".welcome");
@@ -74,7 +91,6 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-
 
 
 // Creating Usernames
@@ -134,7 +150,7 @@ btnLogin.addEventListener('click', function(e) {
   // Prevent form from submitting
   e.preventDefault();
   currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
-  if(currentAccount?.pin === Number(inputLoginPin.value)) {
+  if(currentAccount?.pin === +inputLoginPin.value) {
     inputLoginUsername.value = inputLoginPin.value = "";
 
     // removing focus from the input fields
@@ -152,7 +168,7 @@ btnLogin.addEventListener('click', function(e) {
 // Working on the Transfer
 btnTransfer.addEventListener('click', function(e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
   const receiverAcc = accounts.find(acc => inputTransferTo.value === acc.username);
 
   inputTransferAmount.value = inputTransferTo.value = '';
@@ -173,7 +189,7 @@ else
 // Requesting Loan
 btnLoan.addEventListener('click', function(e) {
   e.preventDefault();
-  const amount = Number(inputLoanAmount.value);
+  const amount = +inputLoanAmount.value;
   if(amount > 0 && currentAccount.movements.some(mov => mov >= 0.1 * amount)) {
     // Add Movement
     currentAccount.movements.push(amount);
@@ -187,7 +203,7 @@ btnLoan.addEventListener('click', function(e) {
 btnClose.addEventListener('click', function(e) {
   e.preventDefault();
 
-  if (inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value) === currentAccount.pin) {
+  if (inputCloseUsername.value === currentAccount.username && +inputClosePin.value === currentAccount.pin) {
     inputCloseUsername.value = inputClosePin.value = '';
     inputClosePin.blur();
     inputCloseUsername.blur();
@@ -210,96 +226,7 @@ btnSort.addEventListener('click', function(e) {
 displayMovements(currentAccount.movements, sorted);
 })
 
-///////////////////////////////////////
-// Coding Challenge #4
-
-/*
-Julia and Kate are still studying dogs, and this time they are studying if dogs are eating too much or too little.
-Eating too much means the dog's current food portion is larger than the recommended portion, and eating too little is the opposite.
-Eating an okay amount means the dog's current food portion is within a range 10% above and 10% below the recommended portion (see hint).
-
-1. Loop over the array containing dog objects, and for each dog, calculate the recommended food portion and add it to the object as a new property. Do NOT create a new array, simply loop over the array. Forumla: recommendedFood = weight ** 0.75 * 28. (The result is in grams of food, and the weight needs to be in kg)
-2. Find Sarah's dog and log to the console whether it's eating too much or too little. HINT: Some dogs have multiple owners, so you first need to find Sarah in the owners array, and so this one is a bit tricky (on purpose) 🤓
-3. Create an array containing all owners of dogs who eat too much ('ownersEatTooMuch') and an array with all owners of dogs who eat too little ('ownersEatTooLittle').
-4. Log a string to the console for each array created in 3., like this: "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat too little!"
-5. Log to the console whether there is any dog eating EXACTLY the amount of food that is recommended (just true or false)
-6. Log to the console whether there is any dog eating an OKAY amount of food (just true or false)
-7. Create an array containing the dogs that are eating an OKAY amount of food (try to reuse the condition used in 6.)
-8. Create a shallow copy of the dogs array and sort it by recommended food portion in an ascending order (keep in mind that the portions are inside the array's objects)
-
-HINT 1: Use many different tools to solve these challenges, you can use the summary lecture to choose between them 😉
-HINT 2: Being within a range 10% above and below the recommended portion means: current > (recommended * 0.90) && current < (recommended * 1.10). Basically, the current portion should be between 90% and 110% of the recommended portion.
-
-TEST DATA:
-const dogs = [
-  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
-  { weight: 8, curFood: 200, owners: ['Matilda'] },
-  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
-  { weight: 32, curFood: 340, owners: ['Michael'] }
-];
-
-GOOD LUCK 😀
-*/
-const dogs = [
-  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
-  { weight: 8, curFood: 200, owners: ['Matilda'] },
-  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
-  { weight: 32, curFood: 340, owners: ['Michael'] }
-];
-
-const calcRecFood = dogs => {
-   dogs.forEach(dog => dog.recFood = Math.trunc(dog.weight ** 0.75 * 28));
-};
-calcRecFood(dogs);
-console.log(dogs);
-
- //
- // const sarahDog = dogs.reduce((dog, curDog) => {
- //   curDog.owners.includes("Sarah") ? dog = curDog : dog
- //   return dog;
- // } ,{})
-
-const sarahDog = dogs.find((dog)=> dog.owners.includes("Sarah"
-));
-const checkDogEatingStatus = (dog) => {
-  const {owners, curFood, recFood} = dog;
-  let statement =  `${owners[0]}'s dog is eating too`;
-  if(curFood <= recFood * 0.9) {
-    return statement += " little";
-  } else if (curFood >= recFood * 1.1) {
-    return statement += " much";
-  }
-  else {
-    return statement = "The dog is eating right";
-  }
-};
-console.log(checkDogEatingStatus(sarahDog));
+console.log(Number.isNaN(+"2df"));
+console.log(Number.parseFloat("3.5rem", 10));
 
 
-
-const flatMapArray = (arr) => {
- return arr.flatMap((dog) => dog.owners);
-};
-function eatStatus(dogs) {
-  const ownersEatTooMuch = flatMapArray(dogs.filter((dog) => dog.curFood >= dog.recFood * 1.1));
-  const ownersEatTooLittle = flatMapArray(dogs.filter((dog)=> dog.curFood <= dog.recFood * 0.9));
-  return `"${ownersEatTooMuch.join(" and ")}'s dogs eat too much!" and "${ownersEatTooLittle.join(" and ")}'s dogs eat too little!"`;
-}
-
-// like this: "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat too little!"
-
-console.log(eatStatus(dogs));
-
-function checkStatus(dog) {
-  return dog.curFood > dog.recFood * 0.9 && dog.curFood < dog.recFood * 1.1;
-}
-console.log(checkStatus(dogs[1]), "checkStatus");
-
-const eatingExact = dogs.some((dog) => dog.curFood === dog.recFood  );
-const eatingOkay = dogs.filter((dog) => checkStatus(dog));
-console.log(eatingExact, "eating exact");
-console.log(eatingOkay, "eating okay");
-
-
-const dogsCopy = dogs.slice().sort((a,b) => a.recFood - b.recFood);
-console.log(dogsCopy);
