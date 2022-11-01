@@ -112,7 +112,7 @@ const displayMovements = function (movements) {
     const type = mov > 0 ? "deposit" : "withdrawal";
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-          <div class="movements__value">${Math.abs(mov)}€</div>
+          <div class="movements__value">${Math.abs(mov).toFixed(2)}€</div>
         </div>`;
       containerMovements.insertAdjacentHTML('afterbegin', html);
   })
@@ -121,17 +121,17 @@ const displayMovements = function (movements) {
 //calculating the Balance for Logged-in user
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 }
 
 //calculating the summary of the logged-in user
 const calcDisplaySummary = function(acc) {
   const {movements, interestRate} = acc;
   const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = movements.filter(mov => mov > 0).map(deposit => interestRate/100 * deposit).filter(interest => interest >= 1).reduce((acc, interest) =>  acc + interest, 0);
   labelSumInterest.textContent = `${interest.toFixed(2)}€`;
@@ -189,7 +189,7 @@ else
 // Requesting Loan
 btnLoan.addEventListener('click', function(e) {
   e.preventDefault();
-  const amount = +inputLoanAmount.value;
+  const amount = Math.floor(inputLoanAmount.value);
   if(amount > 0 && currentAccount.movements.some(mov => mov >= 0.1 * amount)) {
     // Add Movement
     currentAccount.movements.push(amount);
@@ -224,9 +224,5 @@ btnSort.addEventListener('click', function(e) {
   e.preventDefault();
   sorted = !sorted;
 displayMovements(currentAccount.movements, sorted);
+
 })
-
-console.log(Number.isNaN(+"2df"));
-console.log(Number.parseFloat("3.5rem", 10));
-
-
