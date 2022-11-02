@@ -226,3 +226,12 @@ btnSort.addEventListener('click', function(e) {
 displayMovements(currentAccount.movements, sorted);
 
 })
+
+const huge = 23483434858989763847348739487n;
+const num = 23;
+console.log(`${huge} is huge!!!`);
+
+console.log(new Date(1998, 10, 9, 15, 23) );
+const birthYear = new Date(1998, 10, 9, 15, 23);
+
+console.log(birthYear.getFullYear());
