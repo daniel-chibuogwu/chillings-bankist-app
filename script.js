@@ -104,14 +104,22 @@ createUsernames(accounts);
 
 
 let sorted = false;
-const displayMovements = function (movements) {
+const displayMovements = function (acc) {
+  const {movements, movementsDates} = acc;
   containerMovements.innerHTML = "";
   const sortedMov = sorted ? movements.slice().sort((a,b) => a - b) : movements;
 
   sortedMov.forEach((mov, i)=> {
     const type = mov > 0 ? "deposit" : "withdrawal";
+    const date = new Date(movementsDates[i]);
+    const day = `${date.getDate()}`.padStart(2, '0');
+    const month =`${date.getMonth() + 1}`.padStart(2, '0');
+    const year = date.getFullYear();
+    const displayDate = `${day}/${month}/${year}`;
+
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+          <div class="movements__date">${displayDate}</div>
           <div class="movements__value">${Math.abs(mov).toFixed(2)}€</div>
         </div>`;
       containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -139,12 +147,13 @@ const calcDisplaySummary = function(acc) {
 
 const updateUI = function (acc) {
   calcDisplayBalance(acc);
-  displayMovements(acc.movements);
+  displayMovements(acc);
   calcDisplaySummary(acc);
 }
 
 //EVENT HANDLERS
-let currentAccount = account1;
+let currentAccount;
+
 
 btnLogin.addEventListener('click', function(e) {
   // Prevent form from submitting
@@ -152,6 +161,15 @@ btnLogin.addEventListener('click', function(e) {
   currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
   if(currentAccount?.pin === +inputLoginPin.value) {
     inputLoginUsername.value = inputLoginPin.value = "";
+// Working on the date
+    const now = new Date();
+    const date = `${now.getDate()}`.padStart(2, '0');
+    const month =`${now.getMonth() + 1}`.padStart(2, '0');
+    const year = now.getFullYear();
+    const hour = `${now.getHours()}`.padStart(2,'0');
+    const min = `${now.getMinutes()}`.padStart(2,'0');
+
+    labelDate.textContent = `${date}/${month}/${year}, ${hour}:${min}`;
 
     // removing focus from the input fields
     inputLoginUsername.blur();
@@ -177,8 +195,15 @@ btnTransfer.addEventListener('click', function(e) {
   inputTransferTo.blur();
 
 if(amount > 0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username ) {
+
+  // Doing Transfer
   currentAccount.movements.push(-amount);
   receiverAcc.movements.push(amount);
+
+  // Adding Dates of Transfer
+  currentAccount.movementsDates.push(new Date().toISOString());
+  receiverAcc.movementsDates.push(new Date().toISOString());
+
   updateUI(currentAccount);
   console.log(accounts);
 }
@@ -191,8 +216,10 @@ btnLoan.addEventListener('click', function(e) {
   e.preventDefault();
   const amount = Math.floor(inputLoanAmount.value);
   if(amount > 0 && currentAccount.movements.some(mov => mov >= 0.1 * amount)) {
-    // Add Movement
+    // Add loan Movement
     currentAccount.movements.push(amount);
+    // Add loan Date
+    currentAccount.movementsDates.push(new Date().toISOString());
     updateUI(currentAccount);
   }
   inputLoanAmount.value = '';
@@ -223,15 +250,12 @@ btnClose.addEventListener('click', function(e) {
 btnSort.addEventListener('click', function(e) {
   e.preventDefault();
   sorted = !sorted;
-displayMovements(currentAccount.movements, sorted);
+displayMovements(currentAccount, sorted);
 
 })
 
-const huge = 23483434858989763847348739487n;
-const num = 23;
-console.log(`${huge} is huge!!!`);
+const calcDaysPassed = (date1, date2) => Math.abs(date2 -date1)/(1000 * 60 * 60 * 24 );
 
-console.log(new Date(1998, 10, 9, 15, 23) );
-const birthYear = new Date(1998, 10, 9, 15, 23);
+console.log(calcDaysPassed(new Date(2023, 3, 10), new Date(2023, 3, 5)));
 
-console.log(birthYear.getFullYear());
+console.log(Math.floor(4.6), Math.round(4.6));
