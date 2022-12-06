@@ -19,11 +19,11 @@ const account1 = {
     '2019-11-18T21:31:17.178Z',
     '2019-12-23T07:42:02.383Z',
     '2020-01-28T09:15:04.904Z',
-    '2020-04-01T10:17:24.185Z',
-    '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2022-11-28T14:11:59.604Z',
+    '2022-11-30T10:17:24.185Z',
+    '2022-12-03T17:01:17.194Z',
+    '2022-12-03T23:36:17.929Z',
+    '2022-12-05T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -102,6 +102,18 @@ const createUsernames = accounts => {
 }
 createUsernames(accounts);
 
+const formatMovementDate = function(date) {
+  const calcDaysPassed = (date1, date2) => Math.round(Math.abs(date2 -date1)/(1000 * 60 * 60 * 24 ));
+  const daysPassed = calcDaysPassed(new Date(), date);
+
+  if (daysPassed === 0 ) return  "Today";
+  if (daysPassed === 1 ) return  "Yesterday";
+  if (daysPassed <= 7 ) return  `${daysPassed} days ago`;
+  const day = `${date.getDate()}`.padStart(2, '0');
+  const month =`${date.getMonth() + 1}`.padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
 
 let sorted = false;
 const displayMovements = function (acc) {
@@ -111,11 +123,9 @@ const displayMovements = function (acc) {
 
   sortedMov.forEach((mov, i)=> {
     const type = mov > 0 ? "deposit" : "withdrawal";
+
     const date = new Date(movementsDates[i]);
-    const day = `${date.getDate()}`.padStart(2, '0');
-    const month =`${date.getMonth() + 1}`.padStart(2, '0');
-    const year = date.getFullYear();
-    const displayDate = `${day}/${month}/${year}`;
+    const displayDate = formatMovementDate(date);
 
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
@@ -254,8 +264,5 @@ displayMovements(currentAccount, sorted);
 
 })
 
-const calcDaysPassed = (date1, date2) => Math.abs(date2 -date1)/(1000 * 60 * 60 * 24 );
-
-console.log(calcDaysPassed(new Date(2023, 3, 10), new Date(2023, 3, 5)));
-
-console.log(Math.floor(4.6), Math.round(4.6));
+const testDate = new Date();
+console.log(new Intl.DateTimeFormat('en-CA').format(testDate));
