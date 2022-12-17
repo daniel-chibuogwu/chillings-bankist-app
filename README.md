@@ -1,5 +1,5 @@
 # chillings-bankist-app
-Features Bank App
+Features of the Bank App
 - simulated log in feature
 - Log out users after 5 mins of inactivity
 - Loan request 
