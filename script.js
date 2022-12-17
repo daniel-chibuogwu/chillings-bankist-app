@@ -164,13 +164,41 @@ const updateUI = function (acc) {
   displayMovements(acc);
   calcDisplaySummary(acc);
 }
+let currentAccount, timer;
+
+
+function startLogOutTimer (){
+ let time = 60 * 5;
+ const tick = () => {
+   const min = `${Math.trunc(time/60)}`.padStart(2,"0");
+   const sec = String(time % 60).padStart(2, "0");
+   labelTimer.textContent =  `${min}:${sec}`;
+   if (time === 0) {
+     clearInterval(timer);
+     containerApp.style.opacity = "0";
+     labelWelcome.textContent = `Log in to get started`;
+   }
+   time--;
+ };
+ tick();
+  timer = setInterval(tick, 1000);
+ return timer;
+}
 
 //EVENT HANDLERS
-let currentAccount;
+// Initializing timer for inactivity
+function resetTimer() {
+  if (timer) clearInterval(timer);
+  startLogOutTimer();
+}
+
 
 btnLogin.addEventListener('click', function(e) {
   // Prevent form from submitting
   e.preventDefault();
+  // starting timer for inactivity
+ resetTimer();
+
   currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
   if(currentAccount?.pin === +inputLoginPin.value) {
     inputLoginUsername.value = inputLoginPin.value = "";
@@ -210,6 +238,10 @@ btnLogin.addEventListener('click', function(e) {
 // Working on the Transfer
 btnTransfer.addEventListener('click', function(e) {
   e.preventDefault();
+
+  // starting timer for inactivity
+  resetTimer();
+
   const amount = +inputTransferAmount.value;
   const receiverAcc = accounts.find(acc => inputTransferTo.value === acc.username);
 
@@ -238,13 +270,20 @@ else
 // Requesting Loan
 btnLoan.addEventListener('click', function(e) {
   e.preventDefault();
+
+  // starting timer for inactivity
+  resetTimer();
+
   const amount = Math.floor(inputLoanAmount.value);
   if(amount > 0 && currentAccount.movements.some(mov => mov >= 0.1 * amount)) {
-    // Add loan Movement
-    currentAccount.movements.push(amount);
-    // Add loan Date
-    currentAccount.movementsDates.push(new Date().toISOString());
-    updateUI(currentAccount);
+    setTimeout(() => {
+      // Add loan Movement
+      currentAccount.movements.push(amount);
+      // Add loan Date
+      currentAccount.movementsDates.push(new Date().toISOString());
+      updateUI(currentAccount);
+    }, 3000);
+
   }
   inputLoanAmount.value = '';
 });
@@ -273,7 +312,8 @@ btnClose.addEventListener('click', function(e) {
 // Sorting movements
 btnSort.addEventListener('click', function(e) {
   e.preventDefault();
+  // reset timer for inactivity
+  resetTimer();
   sorted = !sorted;
 displayMovements(currentAccount, sorted);
-
 })
