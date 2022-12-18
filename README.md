@@ -6,3 +6,5 @@ Features of the Bank App
 - Money transfer
 - Close account
 - International dating
+
+Check out live demo here https://dan-chibuogwu17.github.io/chillings-bankist-app/
